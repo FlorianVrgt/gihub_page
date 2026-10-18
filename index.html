@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LingoPulse - Entraînez votre vocabulaire au quotidien</title>
+  <meta name="description" content="Application web légère et gratuite pour s'entraîner aux langues étrangères directement depuis GitHub Pages.">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .card-flip {
+      perspective: 1000px;
+    }
+    .card-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-flipped {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">⚡</span>
+        <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">LingoPulse</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+        <a href="#demo" class="hover:text-indigo-600 transition">Entraînement direct</a>
+        <a href="#features" class="hover:text-indigo-600 transition">Fonctionnalités</a>
+        <a href="#stats" class="hover:text-indigo-600 transition">Progression</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Sélecteur de langue cible -->
+        <select id="langSelect" class="bg-slate-100 border border-slate-200 text-xs md:text-sm font-medium rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+          <option value="es" selected>🇪🇸 Espagnol</option>
+          <option value="en">🇬🇧 Anglais</option>
+          <option value="de">🇩🇪 Allemand</option>
+          <option value="it">🇮🇹 Italien</option>
+          <option value="ja">🇯🇵 Japonais</option>
+        </select>
+        <a href="#demo" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition">
+          Commencer
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-12 pb-16 px-4 text-center max-w-4xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-6">
+      <span>✨ 100% Gratuit & Sans inscription</span>
+    </div>
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+      Maîtrisez votre vocabulaire en <span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">5 minutes par jour</span>
+    </h1>
+    <p class="mt-5 text-lg text-slate-600 max-w-2xl mx-auto">
+      Révisez avec des cartes interactives, écoutez la prononciation réelle et suivez votre score quotidien, le tout directement depuis votre navigateur.
+    </p>
+  </section>
+
+  <!-- Section Interactive Demo / Flashcard -->
+  <section id="demo" class="max-w-xl mx-auto px-4 pb-20 w-full">
+    <!-- Barre de stats locale -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mb-6 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🔥</span>
+        <div>
+          <div class="text-xs text-slate-500 font-medium">Série</div>
+          <div class="text-sm font-bold text-slate-800" id="streakCounter">1 jour</div>
+        </div>
+      </div>
+      <div class="h-8 w-px bg-slate-200"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🎯</span>
+        <div>
+          <div class="text-xs text-slate-500 font-medium">Cartes révisées</div>
+          <div class="text-sm font-bold text-slate-800" id="reviewedCounter">0</div>
+        </div>
+      </div>
+      <div class="h-8 w-px bg-slate-200"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">⭐</span>
+        <div>
+          <div class="text-xs text-slate-500 font-medium">Réussite</div>
+          <div class="text-sm font-bold text-emerald-600" id="accuracyCounter">100%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Flashcard -->
+    <div class="card-flip h-64 w-full cursor-pointer group" id="flashcard">
+      <div class="card-inner relative w-full h-full rounded-2xl shadow-md border border-slate-200" id="cardInner">
+        
+        <!-- Face avant (Mot dans la langue étrangère) -->
+        <div class="card-front absolute inset-0 bg-white rounded-2xl p-6 flex flex-col justify-between items-center text-center">
+          <div class="w-full flex justify-between items-center text-xs text-slate-400 font-medium">
+            <span id="cardLangBadge">ESPAGNOL</span>
+            <button id="speakBtn" class="p-1.5 hover:bg-slate-100 rounded-full transition text-slate-600 hover:text-indigo-600" title="Écouter la prononciation">
+              🔊
+            </button>
+          </div>
+          <div>
+            <h2 id="cardWord" class="text-3xl sm:text-4xl font-extrabold text-slate-900">el desafío</h2>
+            <p id="cardPhonetic" class="text-sm text-slate-500 mt-1 font-mono">/el desaˈfi.o/</p>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Cliquez pour voir la traduction ↻</p>
+        </div>
+
+        <!-- Face arrière (Traduction & Exemple en français) -->
+        <div class="card-back absolute inset-0 bg-gradient-to-br from-indigo-600 to-violet-700 text-white rounded-2xl p-6 flex flex-col justify-between items-center text-center">
+          <div class="w-full flex justify-start text-xs text-indigo-200 font-medium">
+            TRADUCTION
+          </div>
+          <div>
+            <h2 id="cardTranslation" class="text-3xl font-bold">le défi</h2>
+            <p id="cardExample" class="text-sm text-indigo-100 mt-2 italic">"Aceptar el desafío" (Accepter le défi)</p>
+          </div>
+          <p class="text-xs text-indigo-200">Cliquez pour revenir au mot</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Boutons d'action pour évaluer la difficulté -->
+    <div class="mt-6 flex gap-3">
+      <button id="btnHard" class="flex-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold py-3 rounded-xl transition text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
+        <span>❌</span> À revoir
+      </button>
+      <button id="btnEasy" class="flex-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-semibold py-3 rounded-xl transition text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
+        <span>✅</span> Je le savais
+      </button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="bg-white border-y border-slate-200 py-16 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl font-bold text-slate-900">Pourquoi cette méthode fonctionne</h2>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">Une approche active basée sur la répétition et l'immersion auditive directe.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4">🔁</div>
+          <h3 class="font-bold text-slate-900 mb-1">Répétition espacée</h3>
+          <p class="text-sm text-slate-600">Revenez plus souvent sur les mots hésitants pour ancrer le vocabulaire dans votre mémoire long terme.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">🎧</div>
+          <h3 class="font-bold text-slate-900 mb-1">Synthèse vocale native</h3>
+          <p class="text-sm text-slate-600">Écoutez la phonétique et l'accent sans API tierce payante grâce au moteur audio de votre navigateur.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
+          <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center text-xl mb-4">💾</div>
+          <h3 class="font-bold text-slate-900 mb-1">Données 100% locales</h3>
+          <p class="text-sm text-slate-600">Votre progression reste sur votre appareil via LocalStorage. Aucune fuite de données, respect total de la vie privée.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto py-8 bg-slate-900 text-slate-400 text-xs sm:text-sm text-center border-t border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© <span id="year"></span> LingoPulse — Hébergé gratuitement sur GitHub Pages.</p>
+      <div class="flex gap-4">
+        <a href="https://github.com" target="_blank" class="hover:text-white transition">Voir sur GitHub</a>
+        <a href="#demo" class="hover:text-white transition">Reprendre l'exercice</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script interactif -->
+  <script>
+    // Jeux de données pour l'entraînement
+    const datasets = {
+      es: [
+        { word: "el desafío", phonetic: "/el desaˈfi.o/", translation: "le défi", example: "Aceptar el desafío.", code: "es-ES" },
+        { word: "la costumbre", phonetic: "/la kosˈtum.bɾe/", translation: "l'habitude", example: "Es una buena costumbre.", code: "es-ES" },
+        { word: "aprovechar", phonetic: "/apɾo.beˈtʃaɾ/", translation: "profiter / rentabiliser", example: "Aprovecha el tiempo.", code: "es-ES" },
+        { word: "desarrollar", phonetic: "/desaroˈʎaɾ/", translation: "développer", example: "Desarrollar una aplicación.", code: "es-ES" }
+      ],
+      en: [
+        { word: "relentless", phonetic: "/rɪˈlent.ləs/", translation: "implacable / acharné", example: "Their relentless effort paid off.", code: "en-US" },
+        { word: "serendipity", phonetic: "/ˌser.ənˈdɪp.ə.ti/", translation: "heureux hasard", example: "A stroke of serendipity.", code: "en-US" },
+        { word: "thrive", phonetic: "/θraɪv/", translation: "prospérer / s'épanouir", example: "Plants thrive in sunlight.", code: "en-US" },
+        { word: "overcome", phonetic: "/ˌoʊ.vɚˈkʌm/", translation: "surmonter", example: "Overcome all obstacles.", code: "en-US" }
+      ],
+      de: [
+        { word: "die Herausforderung", phonetic: "/hɛˈʁaʊ̯sˌfɔʁdəʁʊŋ/", translation: "le défi / challenge", example: "Eine neue Herausforderung.", code: "de-DE" },
+        { word: "die Sehnsucht", phonetic: "/ˈzeːnˌzʊxt/", translation: "le désir ardent / nostalgie", example: "Eine Sehnsucht nach Freiheit.", code: "de-DE" },
+        { word: "begeistern", phonetic: "/bəˈɡaɪ̯stɐn/", translation: "passionner / enthousiasmer", example: "Das Projekt begeistert mich.", code: "de-DE" }
+      ],
+      it: [
+        { word: "il traguardo", phonetic: "/traˈɡwar.do/", translation: "l'objectif / la ligne d'arrivée", example: "Raggiungere il traguardo.", code: "it-IT" },
+        { word: "mozzafiato", phonetic: "/mott͡saˈfja.to/", translation: "à couper le souffle", example: "Un panorama mozzafiato.", code: "it-IT" },
+        { word: "scherzare", phonetic: "/skerˈtsa.re/", translation: "plaisanter", example: "Non sto scherzando.", code: "it-IT" }
+      ],
+      ja: [
+        { word: "木漏れ日 (Komorebi)", phonetic: "/ko.mo.ɾe.bi/", translation: "lumière à travers les arbres", example: "木漏れ日が美しい。", code: "ja-JP" },
+        { word: "改善 (Kaizen)", phonetic: "/kai.zeɴ/", translation: "amélioration continue", example: "継続的な改善。", code: "ja-JP" },
+        { word: "挑戦 (Chōsen)", phonetic: "/t͡ɕoː.seɴ/", translation: "défi / tentative", example: "新しい挑戦を始める。", code: "ja-JP" }
+      ]
+    };
+
+    let currentLang = 'es';
+    let currentIndex = 0;
+    let reviewedCount = parseInt(localStorage.getItem('lingo_reviewed') || '0', 10);
+    let correctCount = parseInt(localStorage.getItem('lingo_correct') || '0', 10);
+
+    // Éléments DOM
+    const flashcard = document.getElementById('flashcard');
+    const cardInner = document.getElementById('cardInner');
+    const cardWord = document.getElementById('cardWord');
+    const cardPhonetic = document.getElementById('cardPhonetic');
+    const cardTranslation = document.getElementById('cardTranslation');
+    const cardExample = document.getElementById('cardExample');
+    const cardLangBadge = document.getElementById('cardLangBadge');
+    const langSelect = document.getElementById('langSelect');
+    const speakBtn = document.getElementById('speakBtn');
+    const btnEasy = document.getElementById('btnEasy');
+    const btnHard = document.getElementById('btnHard');
+    const reviewedCounter = document.getElementById('reviewedCounter');
+    const accuracyCounter = document.getElementById('accuracyCounter');
+
+    // Mise à jour de l'affichage de la carte
+    function updateCard() {
+      const list = datasets[currentLang];
+      const item = list[currentIndex % list.length];
+      
+      cardInner.classList.remove('card-flipped');
+      setTimeout(() => {
+        cardWord.textContent = item.word;
+        cardPhonetic.textContent = item.phonetic;
+        cardTranslation.textContent = item.translation;
+        cardExample.textContent = item.example;
+        cardLangBadge.textContent = langSelect.options[langSelect.selectedIndex].text.toUpperCase();
+      }, 150);
+    }
+
+    // Mise à jour des compteurs
+    function updateStats() {
+      reviewedCounter.textContent = reviewedCount;
+      const acc = reviewedCount > 0 ? Math.round((correctCount / reviewedCount) * 100) : 100;
+      accuracyCounter.textContent = acc + "%";
+      localStorage.setItem('lingo_reviewed', reviewedCount);
+      localStorage.setItem('lingo_correct', correctCount);
+    }
+
+    // Retournement de la carte
+    flashcard.addEventListener('click', (e) => {
+      if (e.target.closest('#speakBtn')) return;
+      cardInner.classList.toggle('card-flipped');
+    });
+
+    // Prononciation audio via Web Speech API
+    speakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const list = datasets[currentLang];
+      const item = list[currentIndex % list.length];
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(item.word);
+        utterance.lang = item.code;
+        window.speechSynthesis.speak(utterance);
+      }
+    });
+
+    // Actions utilisateur
+    btnEasy.addEventListener('click', () => {
+      reviewedCount++;
+      correctCount++;
+      currentIndex++;
+      updateStats();
+      updateCard();
+    });
+
+    btnHard.addEventListener('click', () => {
+      reviewedCount++;
+      currentIndex++;
+      updateStats();
+      updateCard();
+    });
+
+    // Changement de langue
+    langSelect.addEventListener('change', (e) => {
+      currentLang = e.target.value;
+      currentIndex = 0;
+      updateCard();
+    });
+
+    // Initialisation
+    document.getElementById('year').textContent = new Date().getFullYear();
+    updateStats();
+    updateCard();
+  </script>
+</body>
+</html>
