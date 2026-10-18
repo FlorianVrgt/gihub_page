@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=2026-10-18-webapp" />
+<link rel="stylesheet" href="css/style.css?v=2026-10-18-cards" />
 </head>
 <body>
 
@@ -87,8 +87,10 @@
               <div class="session-progress">
                 <div class="session-progress-fill" id="progressFill"></div>
               </div>
-              <div class="session-count" id="cardCounter">Carte 1 / 5</div>
+              <div class="session-count" id="cardCounter">Carte 1 / 50</div>
             </div>
+
+            <div class="level-chips" id="levelChips" role="group" aria-label="Filtrer par niveau"><!-- rempli par JS --></div>
 
             <div class="flashcard-wrapper">
               <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Retourner la carte">
@@ -264,6 +266,6 @@
   <span id="toastMsg">Bien joué !</span>
 </div>
 
-<script src="js/app.js?v=2026-10-18-webapp" defer></script>
+<script src="js/app.js?v=2026-10-18-cards" defer></script>
 </body>
 </html>

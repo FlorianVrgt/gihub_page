@@ -428,7 +428,85 @@ kbd {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
+/* ---- Pastilles de niveau (1 = débutant … 5 = expert) ---- */
+.card-level {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.card-level.lv1 { background: #e4f5ea; color: #1f7a46; }
+.card-level.lv2 { background: #e3f1fb; color: #1f6aa8; }
+.card-level.lv3 { background: #fff3df; color: #a86b14; }
+.card-level.lv4 { background: #fbeae5; color: #b3492f; }
+.card-level.lv5 { background: #efeafc; color: #6a4bd8; }
+
+[data-theme="dark"] .card-level.lv1 { background: #1d3328; color: #6fd39a; }
+[data-theme="dark"] .card-level.lv2 { background: #1c2f42; color: #7db8e8; }
+[data-theme="dark"] .card-level.lv3 { background: #3a2d18; color: #e8b563; }
+[data-theme="dark"] .card-level.lv4 { background: #3a2420; color: #ef9a82; }
+[data-theme="dark"] .card-level.lv5 { background: #2a2444; color: #b3a1f5; }
+
+/* ---- Puces de filtre par niveau (vue Étudier) ---- */
+.level-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.level-chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  border-radius: 100px;
+  padding: 5px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.level-chip:hover { border-color: var(--primary); color: var(--text); }
+
+.level-chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.level-chip.lv1:not(.active)::before,
+.level-chip.lv2:not(.active)::before,
+.level-chip.lv3:not(.active)::before,
+.level-chip.lv4:not(.active)::before,
+.level-chip.lv5:not(.active)::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.level-chip.lv1:not(.active)::before { background: #2e9e5b; }
+.level-chip.lv2:not(.active)::before { background: #2b87c9; }
+.level-chip.lv3:not(.active)::before { background: #d9902a; }
+.level-chip.lv4:not(.active)::before { background: #d4573f; }
+.level-chip.lv5:not(.active)::before { background: #7c5cff; }
 
 .audio-btn {
   position: absolute;
@@ -618,6 +696,13 @@ kbd {
 
 .deck-preview .dp-word { font-weight: 600; color: var(--text); }
 .deck-preview .dp-zh { font-family: 'Noto Serif SC', serif; color: var(--text-muted); }
+.deck-preview .dp-right { display: flex; align-items: center; gap: 8px; }
+.deck-preview .dp-more {
+  justify-content: center;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
 
 /* ============ VUE PROGRESSION ============ */
 .stat-grid {
@@ -741,11 +826,23 @@ kbd {
 
 .deck-card h3 { font-size: 1rem; font-weight: 700; }
 
+.deck-card .deck-desc {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
 .deck-card .deck-meta {
   font-size: 0.82rem;
   color: var(--text-muted);
   display: flex;
   gap: 12px;
+}
+
+.deck-card .deck-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .deck-card .btn { margin-top: auto; }
