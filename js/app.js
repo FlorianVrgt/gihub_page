@@ -1,7 +1,7 @@
 /* ============================================================
-   LingoPulse — Application principale
+   LingoPulse — Application principale (design webapp)
    Flashcards chinois (depuis le français ou l'anglais)
-   Données et progression stockées localement (LocalStorage)
+   Navigation par vues, préférences et progression en LocalStorage
    ============================================================ */
 
 (function () {
@@ -9,9 +9,10 @@
 
   // ============ CONSTANTES ============
   const STORAGE_KEY = 'lingopulse_stats';
+  const PREFS_KEY = 'lingopulse_prefs';
   const MS_PER_DAY = 24 * 60 * 60 * 1000;
   const TOAST_DURATION_MS = 2200;
-  const SPEECH_RATE = 0.85;
+  const DEFAULT_RATE = 0.85;
 
   // ============ DONNÉES VOCABULAIRE (langue source -> chinois) ============
   const vocab = {
@@ -37,10 +38,18 @@
     }
   };
 
+  const VIEW_TITLES = {
+    study: 'Étudier',
+    stats: 'Progression',
+    decks: 'Decks',
+    settings: 'Réglages'
+  };
+
   // ============ ÉTAT ============
   let currentLang = 'fr';
   let currentCardIndex = 0;
   let toastTimer = null;
+  let session = { seen: 0, known: 0, review: 0 };
 
   function defaultStats() {
     return {
@@ -48,32 +57,44 @@
       cards: 0,
       known: 0,
       total: 0,
-      lastDate: new Date().toDateString()
+      lastDate: new Date().toDateString(),
+      byDeck: { fr: { total: 0, known: 0 }, en: { total: 0, known: 0 } }
     };
   }
 
-  function loadStats() {
+  function defaultPrefs() {
+    return { rate: DEFAULT_RATE, shuffle: false, theme: 'light' };
+  }
+
+  function loadJSON(key, mergeDefaults) {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return defaultStats();
-      const parsed = JSON.parse(raw);
-      // Fusion avec les valeurs par défaut pour tolérer un schéma obsolète
-      return Object.assign(defaultStats(), parsed);
+      const raw = localStorage.getItem(key);
+      if (!raw) return mergeDefaults();
+      return Object.assign(mergeDefaults(), JSON.parse(raw));
     } catch (err) {
-      console.warn('LingoPulse : stats illisibles, réinitialisation.', err);
-      return defaultStats();
+      console.warn('LingoPulse : données illisibles (' + key + '), réinitialisation.', err);
+      return mergeDefaults();
     }
   }
 
-  function saveStats() {
+  function saveJSON(key, value) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+      localStorage.setItem(key, JSON.stringify(value));
     } catch (err) {
-      console.warn('LingoPulse : impossible de sauvegarder les stats.', err);
+      console.warn('LingoPulse : impossible de sauvegarder (' + key + ').', err);
     }
   }
 
-  const stats = loadStats();
+  const stats = loadJSON(STORAGE_KEY, defaultStats);
+  const prefs = loadJSON(PREFS_KEY, defaultPrefs);
+
+  // Tolère un schéma obsolète pour byDeck
+  if (!stats.byDeck || typeof stats.byDeck !== 'object') {
+    stats.byDeck = { fr: { total: 0, known: 0 }, en: { total: 0, known: 0 } };
+  }
+
+  function saveStats() { saveJSON(STORAGE_KEY, stats); }
+  function savePrefs() { saveJSON(PREFS_KEY, prefs); }
 
   // Met à jour la série quotidienne au chargement
   function refreshStreak() {
@@ -94,6 +115,13 @@
 
   // ============ RÉFÉRENCES DOM ============
   const el = {
+    sidebar: document.querySelector('.sidebar'),
+    menuBtn: document.getElementById('menuBtn'),
+    overlay: document.getElementById('overlay'),
+    sideItems: Array.from(document.querySelectorAll('.side-item[data-view]')),
+    views: Array.from(document.querySelectorAll('.view')),
+    viewTitle: document.getElementById('viewTitle'),
+    deckSelect: document.getElementById('deckSelect'),
     flashcard: document.getElementById('flashcard'),
     wordFront: document.getElementById('wordFront'),
     phonetic: document.getElementById('phonetic'),
@@ -103,13 +131,32 @@
     audioBtn: document.getElementById('audioBtn'),
     btnKnow: document.getElementById('btnKnow'),
     btnReview: document.getElementById('btnReview'),
+    progressFill: document.getElementById('progressFill'),
+    cardCounter: document.getElementById('cardCounter'),
     streakValue: document.getElementById('streakValue'),
     cardsValue: document.getElementById('cardsValue'),
     successValue: document.getElementById('successValue'),
+    sideStreak: document.getElementById('sideStreak'),
+    sessionSeen: document.getElementById('sessionSeen'),
+    sessionKnown: document.getElementById('sessionKnown'),
+    sessionReview: document.getElementById('sessionReview'),
+    miniKnown: document.getElementById('miniKnown'),
+    miniReview: document.getElementById('miniReview'),
+    btnResetSession: document.getElementById('btnResetSession'),
+    deckPreview: document.getElementById('deckPreview'),
+    kpiStreak: document.getElementById('kpiStreak'),
+    kpiCards: document.getElementById('kpiCards'),
+    kpiSuccess: document.getElementById('kpiSuccess'),
+    kpiMastered: document.getElementById('kpiMastered'),
+    deckStatsBody: document.getElementById('deckStatsBody'),
+    btnResetStats: document.getElementById('btnResetStats'),
+    deckCards: document.getElementById('deckCards'),
+    rateSlider: document.getElementById('rateSlider'),
+    shuffleToggle: document.getElementById('shuffleToggle'),
+    darkToggle: document.getElementById('darkToggle'),
     toast: document.getElementById('toast'),
     toastIcon: document.getElementById('toastIcon'),
-    toastMsg: document.getElementById('toastMsg'),
-    langButtons: Array.from(document.querySelectorAll('.lang-btn'))
+    toastMsg: document.getElementById('toastMsg')
   };
 
   // ============ SÉLECTIONNEURS ============
@@ -121,28 +168,89 @@
     return currentDeck().cards[currentCardIndex];
   }
 
+  function successRate() {
+    return stats.total > 0 ? Math.round((stats.known / stats.total) * 100) : 0;
+  }
+
+  // ============ NAVIGATION PAR VUES ============
+  function switchView(view) {
+    if (!VIEW_TITLES[view]) view = 'study';
+    el.views.forEach((v) => v.classList.toggle('active', v.id === 'view-' + view));
+    el.sideItems.forEach((b) => b.classList.toggle('active', b.dataset.view === view));
+    el.viewTitle.textContent = VIEW_TITLES[view];
+    closeMobileNav();
+    if (view === 'stats') renderStatsView();
+    if (view === 'decks') renderDecksView();
+    window.scrollTo({ top: 0 });
+  }
+
+  // Menu mobile
+  function openMobileNav() {
+    el.sidebar.classList.add('open');
+    document.body.classList.add('nav-open');
+  }
+
+  function closeMobileNav() {
+    el.sidebar.classList.remove('open');
+    document.body.classList.remove('nav-open');
+  }
+
   // ============ AFFICHAGE ============
   function renderCard() {
     const data = currentDeck();
     const card = currentCard();
     el.wordFront.textContent = card.word;
-    el.phonetic.textContent = `${card.translation} · ${card.pinyin}`;
+    el.phonetic.textContent = card.pinyin;
     el.wordBack.textContent = card.translation;
     el.example.textContent = card.example;
-    el.cardLang.textContent = `${data.flag} ${data.name}`;
+    el.cardLang.textContent = `${data.flag} Mot à traduire`;
     el.flashcard.classList.remove('flipped');
+    el.cardCounter.textContent = `Carte ${currentCardIndex + 1} / ${data.cards.length}`;
+    el.progressFill.style.width =
+      ((currentCardIndex + 1) / data.cards.length * 100) + '%';
   }
 
   function nextCard() {
-    currentCardIndex = (currentCardIndex + 1) % currentDeck().cards.length;
+    const len = currentDeck().cards.length;
+    if (prefs.shuffle && len > 1) {
+      let next = currentCardIndex;
+      while (next === currentCardIndex) {
+        next = Math.floor(Math.random() * len);
+      }
+      currentCardIndex = next;
+    } else {
+      currentCardIndex = (currentCardIndex + 1) % len;
+    }
+    renderCard();
+  }
+
+  function prevCard() {
+    const len = currentDeck().cards.length;
+    currentCardIndex = (currentCardIndex - 1 + len) % len;
     renderCard();
   }
 
   function updateStatsUI() {
+    const success = successRate();
     el.streakValue.textContent = stats.streak;
     el.cardsValue.textContent = stats.cards;
-    const success = stats.total > 0 ? Math.round((stats.known / stats.total) * 100) : 0;
     el.successValue.textContent = success + '%';
+    el.sideStreak.textContent = stats.streak;
+  }
+
+  function updateSessionUI() {
+    el.sessionSeen.textContent = session.seen;
+    el.sessionKnown.textContent = session.known;
+    el.sessionReview.textContent = session.review;
+    const total = Math.max(session.seen, 1);
+    el.miniKnown.style.width = (session.known / total * 100) + '%';
+    el.miniReview.style.width = (session.review / total * 100) + '%';
+  }
+
+  function renderDeckPreview() {
+    el.deckPreview.innerHTML = currentDeck().cards.map((c) =>
+      `<li><span class="dp-word">${c.word}</span><span class="dp-zh">${c.translation}</span></li>`
+    ).join('');
   }
 
   function showToast(icon, msg) {
@@ -161,10 +269,9 @@
       return;
     }
     window.speechSynthesis.cancel();
-    // Prononce le mot en chinois (langue cible)
     const utter = new SpeechSynthesisUtterance(card.translation);
     utter.lang = currentDeck().tts; // zh-CN
-    utter.rate = SPEECH_RATE;
+    utter.rate = prefs.rate;
     el.audioBtn.classList.add('playing');
     const stopPulse = () => el.audioBtn.classList.remove('playing');
     utter.onend = stopPulse;
@@ -177,21 +284,91 @@
     stats.cards += 1;
     stats.total += 1;
     if (known) stats.known += 1;
+
+    const deck = stats.byDeck[currentLang] ||
+      (stats.byDeck[currentLang] = { total: 0, known: 0 });
+    deck.total += 1;
+    if (known) deck.known += 1;
+
+    session.seen += 1;
+    if (known) session.known += 1; else session.review += 1;
+
     saveStats();
     updateStatsUI();
+    updateSessionUI();
     nextCard();
   }
 
   function selectLanguage(lang) {
+    if (!vocab[lang]) return;
     currentLang = lang;
     currentCardIndex = 0;
-    el.langButtons.forEach((b) =>
-      b.classList.toggle('active', b.dataset.lang === lang)
-    );
+    el.deckSelect.value = lang;
     renderCard();
+    renderDeckPreview();
+  }
+
+  // ============ VUES DYNAMIQUES ============
+  function renderStatsView() {
+    el.kpiStreak.textContent = stats.streak;
+    el.kpiCards.textContent = stats.cards;
+    el.kpiSuccess.textContent = successRate() + '%';
+    el.kpiMastered.textContent = stats.known;
+
+    el.deckStatsBody.innerHTML = Object.keys(vocab).map((key) => {
+      const d = stats.byDeck[key] || { total: 0, known: 0 };
+      const pct = d.total > 0 ? Math.round(d.known / d.total * 100) : 0;
+      return `<tr>
+        <td>${vocab[key].flag} ${vocab[key].name}</td>
+        <td>${d.total} réponse${d.total > 1 ? 's' : ''}</td>
+        <td>
+          <span class="mastery-bar"><span class="mastery-fill" style="width:${pct}%"></span></span>
+          ${pct}%
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderDecksView() {
+    el.deckCards.innerHTML = Object.keys(vocab).map((key) => {
+      const d = stats.byDeck[key] || { total: 0, known: 0 };
+      const pct = d.total > 0 ? Math.round(d.known / d.total * 100) : 0;
+      return `<div class="deck-card">
+        <div class="deck-flag">${vocab[key].flag}</div>
+        <h3>${vocab[key].name}</h3>
+        <div class="deck-meta">
+          <span>${vocab[key].cards.length} cartes</span>
+          <span>${pct}% maîtrise</span>
+        </div>
+        <button class="btn btn-primary" data-start-deck="${key}">Étudier ce deck</button>
+      </div>`;
+    }).join('');
+  }
+
+  // ============ THÈME ============
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', prefs.theme);
+    el.darkToggle.checked = prefs.theme === 'dark';
   }
 
   // ============ ÉVÉNEMENTS ============
+  el.sideItems.forEach((btn) => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+
+  document.querySelector('.logo').addEventListener('click', (e) => {
+    e.preventDefault();
+    switchView('study');
+  });
+
+  el.menuBtn.addEventListener('click', () => {
+    el.sidebar.classList.contains('open') ? closeMobileNav() : openMobileNav();
+  });
+
+  el.overlay.addEventListener('click', closeMobileNav);
+
+  el.deckSelect.addEventListener('change', () => selectLanguage(el.deckSelect.value));
+
   el.flashcard.addEventListener('click', () =>
     el.flashcard.classList.toggle('flipped')
   );
@@ -211,24 +388,87 @@
     showToast('🔁', 'On reverra ce mot plus tard');
   });
 
-  el.langButtons.forEach((btn) => {
-    btn.addEventListener('click', () => selectLanguage(btn.dataset.lang));
+  el.btnResetSession.addEventListener('click', () => {
+    session = { seen: 0, known: 0, review: 0 };
+    updateSessionUI();
+    showToast('🧹', 'Session réinitialisée');
   });
 
-  // Révélation au défilement
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+  el.btnResetStats.addEventListener('click', () => {
+    Object.assign(stats, defaultStats());
+    saveStats();
+    updateStatsUI();
+    renderStatsView();
+    showToast('🗑️', 'Statistiques réinitialisées');
+  });
 
-  document.querySelectorAll('.reveal').forEach((node) => observer.observe(node));
+  // Délégation : boutons "Étudier ce deck" dans la vue Decks
+  el.deckCards.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-start-deck]');
+    if (!btn) return;
+    selectLanguage(btn.dataset.startDeck);
+    switchView('study');
+  });
+
+  // Raccourcis clavier
+  document.addEventListener('keydown', (e) => {
+    const active = document.activeElement;
+    const tag = active && active.tagName;
+    // Ne capture pas les touches dans un champ ; mais si c'est un bouton
+    // focusable, on redonne le focus au corps pour éviter le "double clic"
+    // déclenché par Espace sur ledit bouton.
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    if (tag === 'BUTTON' || (active && active.getAttribute('role') === 'button')) {
+      active.blur();
+    }
+
+    const studyActive = document.getElementById('view-study').classList.contains('active');
+    if (!studyActive) return;
+
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (el.flashcard.classList.contains('flipped')) {
+        recordAnswer(true);
+        showToast('✅', 'Bien joué !');
+      } else {
+        el.flashcard.classList.toggle('flipped');
+      }
+    } else if (e.key === 'r' || e.key === 'R') {
+      recordAnswer(false);
+      showToast('🔁', 'On reverra ce mot plus tard');
+    } else if (e.key === 'ArrowRight') {
+      nextCard();
+    } else if (e.key === 'ArrowLeft') {
+      prevCard();
+    }
+  });
+
+  // Réglages
+  el.rateSlider.value = prefs.rate;
+  el.rateSlider.addEventListener('input', () => {
+    prefs.rate = parseFloat(el.rateSlider.value) || DEFAULT_RATE;
+    savePrefs();
+  });
+
+  el.shuffleToggle.checked = !!prefs.shuffle;
+  el.shuffleToggle.addEventListener('change', () => {
+    prefs.shuffle = el.shuffleToggle.checked;
+    savePrefs();
+    showToast(prefs.shuffle ? '🔀' : '📋',
+      prefs.shuffle ? 'Ordre aléatoire activé' : 'Ordre séquentiel activé');
+  });
+
+  el.darkToggle.addEventListener('change', () => {
+    prefs.theme = el.darkToggle.checked ? 'dark' : 'light';
+    applyTheme();
+    savePrefs();
+  });
 
   // ============ INITIALISATION ============
+  applyTheme();
   refreshStreak();
   renderCard();
+  renderDeckPreview();
   updateStatsUI();
+  updateSessionUI();
 })();

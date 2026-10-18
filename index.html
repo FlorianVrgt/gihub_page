@@ -3,202 +3,267 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="LingoPulse — Cartes de vocabulaire pour apprendre le chinois depuis le français ou l'anglais. Gratuit, sans inscription, 100% local." />
-<title>LingoPulse — Cartes de vocabulaire chinois</title>
+<meta name="description" content="LingoPulse — Application de flashcards pour apprendre le chinois depuis le français ou l'anglais. Gratuit, sans inscription, 100% local." />
+<title>LingoPulse — Apprenez le chinois</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=2026-10-18-redesign" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2026-10-18-webapp" />
 </head>
 <body>
 
-<header>
-  <div class="container nav">
-    <a href="#" class="logo">
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR (desktop) ============ -->
+  <aside class="sidebar">
+    <a href="#" class="logo" data-view="study">
       <div class="logo-icon">文</div>
       <span>LingoPulse</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#demo">Entraînement</a></li>
-      <li><a href="#features">Fonctionnalités</a></li>
-      <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
-    </ul>
-    <a href="#demo" class="btn btn-primary">Commencer</a>
-  </div>
-</header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container">
-      <div class="badge">
-        Cartes de vocabulaire · français &amp; anglais → chinois
+    <nav class="side-nav" aria-label="Navigation principale">
+      <button class="side-item active" data-view="study">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>Étudier</span>
+      </button>
+      <button class="side-item" data-view="stats">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="7"/><line x1="18" y1="20" x2="18" y2="10"/></svg>
+        <span>Progression</span>
+      </button>
+      <button class="side-item" data-view="decks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M2 13l10 5 10-5"/></svg>
+        <span>Decks</span>
+      </button>
+      <button class="side-item" data-view="settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Réglages</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="streak-pill" title="Série quotidienne">
+        🔥 <strong id="sideStreak">0</strong>&nbsp;j
       </div>
-      <h1>Apprenez le chinois<br><span class="gradient">à votre rythme, 5 minutes par jour</span></h1>
-      <p class="hero-subtitle">
-        Révisez le vocabulaire chinois (中文) avec des cartes interactives, écoutez la prononciation et suivez votre progression — directement depuis votre navigateur, sans rien installer.
-      </p>
-      <div class="hero-cta">
-        <a href="#demo" class="btn btn-primary btn-lg">
-          Commencer à réviser
-        </a>
-        <a href="#features" class="btn btn-ghost btn-lg">
-          Découvrir la méthode
-        </a>
-      </div>
-      <div class="trust">
-        <span class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          Données 100% locales
-        </span>
-        <span class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          Aucune publicité
-        </span>
-        <span class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          Open source
-        </span>
-      </div>
+      <a class="side-item" href="https://github.com" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.4v3.5c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+        <span>GitHub</span>
+      </a>
     </div>
-  </section>
+  </aside>
 
-  <!-- DEMO -->
-  <section class="demo-section" id="demo">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Entraînement interactif</span>
-        <h2>Séance de révision</h2>
-        <p>Choisissez votre langue de départ (français ou anglais), cliquez sur la carte pour révéler le mot chinois, écoutez la prononciation, puis indiquez si vous connaissiez le mot.</p>
+  <!-- ============ CONTENU PRINCIPAL ============ -->
+  <div class="main-col">
+
+    <!-- Barre supérieure -->
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+      <div class="topbar-title" id="viewTitle">Étudier</div>
+
+      <div class="deck-select">
+        <label class="sr-only" for="deckSelect">Deck</label>
+        <select id="deckSelect">
+          <option value="fr">🇫🇷 Français → Chinois</option>
+          <option value="en">🇬🇧 Anglais → Chinois</option>
+        </select>
       </div>
 
-      <div class="lang-selector reveal" id="langSelector">
-        <button class="lang-btn active" data-lang="fr">🇫🇷 Français → Chinois</button>
-        <button class="lang-btn" data-lang="en">🇬🇧 Anglais → Chinois</button>
+      <div class="topbar-stats">
+        <span class="chip" title="Série quotidienne">🔥 <b id="streakValue">0</b></span>
+        <span class="chip" title="Cartes révisées">🎯 <b id="cardsValue">0</b></span>
+        <span class="chip" title="Taux de réussite">⭐ <b id="successValue">0%</b></span>
       </div>
+    </header>
 
-      <div class="stats-bar reveal">
-        <div class="stat-card">
-          <div class="stat-icon">🔥</div>
-          <div class="stat-value" id="streakValue">0</div>
-          <div class="stat-label">Série</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-value" id="cardsValue">0</div>
-          <div class="stat-label">Cartes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">⭐</div>
-          <div class="stat-value" id="successValue">0%</div>
-          <div class="stat-label">Réussite</div>
-        </div>
-      </div>
+    <main class="content">
 
-      <div class="flashcard-wrapper reveal">
-        <div class="flashcard" id="flashcard">
-          <div class="card-face card-front">
-            <div class="card-lang" id="cardLang">🇫🇷 Mot à traduire</div>
-            <button class="audio-btn" id="audioBtn" aria-label="Écouter la prononciation">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-              </svg>
-            </button>
-            <div class="word" id="wordFront">le défi</div>
-            <div class="phonetic" id="phonetic">挑战 · tiǎo zhàn</div>
-            <div class="card-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 15l-6-6M9 15l6-6"/></svg>
-              Cliquez pour retourner
+      <!-- ===== VUE : ÉTUDE ===== -->
+      <section class="view active" id="view-study">
+        <div class="study-layout">
+          <div class="study-main">
+
+            <div class="session-bar">
+              <div class="session-progress">
+                <div class="session-progress-fill" id="progressFill"></div>
+              </div>
+              <div class="session-count" id="cardCounter">Carte 1 / 5</div>
+            </div>
+
+            <div class="flashcard-wrapper">
+              <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Retourner la carte">
+                <div class="card-face card-front">
+                  <div class="card-lang" id="cardLang">🇫🇷 Mot à traduire</div>
+                  <button class="audio-btn" id="audioBtn" aria-label="Écouter la prononciation">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  </button>
+                  <div class="word" id="wordFront">le défi</div>
+                  <div class="card-hint">Espace · Cliquez pour retourner</div>
+                </div>
+                <div class="card-face card-back">
+                  <div class="card-lang">🇨🇳 Chinois</div>
+                  <div class="translation" id="wordBack">挑战</div>
+                  <div class="phonetic" id="phonetic">tiǎo zhàn</div>
+                  <div class="example" id="example">「接受挑战」— Accepter le défi</div>
+                  <div class="card-hint">Cliquez pour revenir au mot</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="action-btn review" id="btnReview">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                À revoir <kbd>R</kbd>
+              </button>
+              <button class="action-btn know" id="btnKnow">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Je le savais <kbd>Espace</kbd>
+              </button>
+            </div>
+
+            <div class="keyboard-help">
+              <kbd>←</kbd> <kbd>→</kbd> naviguer · <kbd>Espace</kbd> retourner / savoir · <kbd>R</kbd> à revoir · <kbd>🔊</kbd> écouter
             </div>
           </div>
-          <div class="card-face card-back">
-            <div class="card-lang">🇨🇳 Chinois</div>
-            <div class="translation" id="wordBack">挑战</div>
-            <div class="example" id="example">「接受挑战」— Accepter le défi</div>
-            <div class="card-hint">Cliquez pour revenir au mot</div>
+
+          <aside class="study-panel">
+            <h3>Cette session</h3>
+            <div class="panel-stat">
+              <span>Cartes vues</span><strong id="sessionSeen">0</strong>
+            </div>
+            <div class="panel-stat">
+              <span>Acquises</span><strong id="sessionKnown">0</strong>
+            </div>
+            <div class="panel-stat">
+              <span>À revoir</span><strong id="sessionReview">0</strong>
+            </div>
+            <div class="mini-bars">
+              <div class="mini-bar known" id="miniKnown" style="width:0%"></div>
+              <div class="mini-bar review" id="miniReview" style="width:0%"></div>
+            </div>
+            <button class="btn btn-ghost btn-block" id="btnResetSession">Réinitialiser la session</button>
+
+            <h3 class="panel-mt">Raccourcis deck</h3>
+            <ul class="deck-preview" id="deckPreview"><!-- rempli par JS --></ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===== VUE : PROGRESSION ===== -->
+      <section class="view" id="view-stats">
+        <div class="page-head">
+          <h2>Progression</h2>
+          <p>Vos statistiques sont calculées à partir de vos réponses, uniquement sur votre appareil.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">🔥</div>
+            <div class="kpi-value" id="kpiStreak">0</div>
+            <div class="kpi-label">Jours de série</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🎯</div>
+            <div class="kpi-value" id="kpiCards">0</div>
+            <div class="kpi-label">Cartes révisées</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">⭐</div>
+            <div class="kpi-value" id="kpiSuccess">0%</div>
+            <div class="kpi-label">Taux de réussite</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-value" id="kpiMastered">0</div>
+            <div class="kpi-label">Mots maîtrisés</div>
           </div>
         </div>
-      </div>
 
-      <div class="card-actions reveal">
-        <button class="action-btn review" id="btnReview">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          À revoir
-        </button>
-        <button class="action-btn know" id="btnKnow">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Je le savais
-        </button>
-      </div>
-    </div>
-  </section>
+        <div class="panel">
+          <div class="panel-title-row">
+            <h3>Par deck</h3>
+            <button class="link-btn" id="btnResetStats">Réinitialiser les stats</button>
+          </div>
+          <table class="table">
+            <thead>
+              <tr><th>Deck</th><th>Réponses</th><th>Maîtrise</th></tr>
+            </thead>
+            <tbody id="deckStatsBody"><!-- rempli par JS --></tbody>
+          </table>
+        </div>
+      </section>
 
-  <!-- FEATURES -->
-  <section class="features-section" id="features">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Méthode</span>
-        <h2>Comment LingoPulse vous aide à retenir</h2>
-        <p>Une approche active, basée sur la répétition espacée et l'immersion auditive directe — sans distraction ni artifices.</p>
-      </div>
+      <!-- ===== VUE : DECKS ===== -->
+      <section class="view" id="view-decks">
+        <div class="page-head">
+          <h2>Decks</h2>
+          <p>Choisissez un parcours puis lancez une session d'entraînement.</p>
+        </div>
+        <div class="deck-cards" id="deckCards"><!-- rempli par JS --></div>
+      </section>
 
-      <div class="features-grid">
-        <div class="feature-card reveal">
-          <div class="feature-icon">🔁</div>
-          <h3>Répétition espacée</h3>
-          <p>Revenez plus souvent sur les mots hésitants pour ancrer le vocabulaire dans votre mémoire à long terme, au bon rythme.</p>
+      <!-- ===== VUE : RÉGLAGES ===== -->
+      <section class="view" id="view-settings">
+        <div class="page-head">
+          <h2>Réglages</h2>
+          <p>Vos préférences sont enregistrées localement dans le navigateur.</p>
         </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🎧</div>
-          <h3>Prononciation audio</h3>
-          <p>Écoutez la phonétique et l'accent grâce au moteur audio de votre navigateur. Aucune API tierce, aucun coût.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">💾</div>
-          <h3>Données 100% locales</h3>
-          <p>Votre progression reste sur votre appareil via LocalStorage. Aucune fuite de données, respect total de votre vie privée.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🕓</div>
-          <h3>Sessions courtes</h3>
-          <p>Aucune inscription, aucune installation. Ouvrez la page et révisez quelques minutes, ici et maintenant.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🌍</div>
-          <h3>2 parcours vers le chinois</h3>
-          <p>Français → Chinois et Anglais → Chinois — avec des decks de vocabulaire soigneusement sélectionnés.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">📊</div>
-          <h3>Suivi de progression</h3>
-          <p>Visualisez votre série quotidienne, le nombre de cartes révisées et votre taux de réussite en temps réel.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
 
-<footer>
-  <div class="container footer-content">
-    <p>© 2026 LingoPulse — Hébergé gratuitement sur GitHub Pages</p>
-    <ul class="footer-links">
-      <li><a href="https://github.com" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.4v3.5c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
-        GitHub
-      </a></li>
-      <li><a href="#demo">Reprendre l'exercice</a></li>
-    </ul>
+        <div class="panel settings-panel">
+          <div class="setting-row">
+            <div>
+              <strong>Vitesse de prononciation</strong>
+              <span class="setting-desc">Adaptez le débit de la synthèse vocale chinoise.</span>
+            </div>
+            <input type="range" id="rateSlider" min="0.5" max="1.2" step="0.05" />
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Mélange des cartes</strong>
+              <span class="setting-desc">Ordre aléatoire plutôt que séquentiel.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="shuffleToggle" />
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Thème sombre</strong>
+              <span class="setting-desc">Bascule immédiate, mémorisée entre les sessions.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="darkToggle" />
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div>
+              <strong>Données locales</strong>
+              <span class="setting-desc">Tout est stocké dans votre navigateur — aucune donnée envoyée.</span>
+            </div>
+            <a class="btn btn-ghost" href="https://github.com" target="_blank" rel="noopener">Voir le code source</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
-</footer>
 
-<div class="toast" id="toast">
+  <!-- Overlay mobile -->
+  <div class="overlay" id="overlay"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
   <span id="toastIcon">✅</span>
   <span id="toastMsg">Bien joué !</span>
 </div>
 
-
-<script src="js/app.js?v=2026-10-18-redesign" defer></script>
+<script src="js/app.js?v=2026-10-18-webapp" defer></script>
 </body>
 </html>
