@@ -16,7 +16,7 @@
   // ============ DONNÉES VOCABULAIRE (langue source -> chinois) ============
   const vocab = {
     fr: {
-      flag: '🇫🇷', name: 'FRANÇAIS → CHINOIS', tts: 'zh-CN',
+      flag: '🇫🇷', name: 'Français → Chinois', tts: 'zh-CN',
       cards: [
         { word: 'le défi', pinyin: 'tiǎo zhàn', translation: '挑战', example: '「接受挑战」— Accepter le défi' },
         { word: 'l\'aventure', pinyin: 'mào xiǎn', translation: '冒险', example: '「一次伟大的冒险」— Une grande aventure' },
@@ -26,7 +26,7 @@
       ]
     },
     en: {
-      flag: '🇬🇧', name: 'ENGLISH → CHINESE', tts: 'zh-CN',
+      flag: '🇬🇧', name: 'Anglais → Chinois', tts: 'zh-CN',
       cards: [
         { word: 'serendipity', pinyin: 'qì yù', translation: '奇遇', example: '「美好的奇遇」— A fortunate serendipity' },
         { word: 'to thrive', pinyin: 'fāng xīng', translation: '方兴', example: '「在困难时期蓬勃发展」— To thrive in difficult times' },
