@@ -433,7 +433,7 @@ kbd {
   gap: 8px;
 }
 
-/* ---- Pastilles de niveau (1 = débutant … 5 = expert) ---- */
+/* ---- Pastilles de niveau HSK (rouge = HSK 1 … violet = HSK 6) ---- */
 .card-level {
   display: inline-flex;
   align-items: center;
@@ -449,17 +449,20 @@ kbd {
   white-space: nowrap;
 }
 
-.card-level.lv1 { background: #e4f5ea; color: #1f7a46; }
-.card-level.lv2 { background: #e3f1fb; color: #1f6aa8; }
-.card-level.lv3 { background: #fff3df; color: #a86b14; }
-.card-level.lv4 { background: #fbeae5; color: #b3492f; }
-.card-level.lv5 { background: #efeafc; color: #6a4bd8; }
+/* Couleurs inspirées de l'échelle officielle des niveaux HSK (1 = rouge … 6 = violet) */
+.card-level.lv1 { background: #fdecea; color: #b3492f; }
+.card-level.lv2 { background: #fff3df; color: #a86b14; }
+.card-level.lv3 { background: #fdf6d8; color: #8a7a10; }
+.card-level.lv4 { background: #e3f1fb; color: #1f6aa8; }
+.card-level.lv5 { background: #e4f5ea; color: #1f7a46; }
+.card-level.lv6 { background: #efeafc; color: #6a4bd8; }
 
-[data-theme="dark"] .card-level.lv1 { background: #1d3328; color: #6fd39a; }
-[data-theme="dark"] .card-level.lv2 { background: #1c2f42; color: #7db8e8; }
-[data-theme="dark"] .card-level.lv3 { background: #3a2d18; color: #e8b563; }
-[data-theme="dark"] .card-level.lv4 { background: #3a2420; color: #ef9a82; }
-[data-theme="dark"] .card-level.lv5 { background: #2a2444; color: #b3a1f5; }
+[data-theme="dark"] .card-level.lv1 { background: #3a2420; color: #ef9a82; }
+[data-theme="dark"] .card-level.lv2 { background: #3a2d18; color: #e8b563; }
+[data-theme="dark"] .card-level.lv3 { background: #3d3a1a; color: #e6dd7a; }
+[data-theme="dark"] .card-level.lv4 { background: #1c2f42; color: #7db8e8; }
+[data-theme="dark"] .card-level.lv5 { background: #1d3328; color: #6fd39a; }
+[data-theme="dark"] .card-level.lv6 { background: #2a2444; color: #b3a1f5; }
 
 /* ---- Puces de filtre par niveau (vue Étudier) ---- */
 .level-chips {
@@ -493,7 +496,8 @@ kbd {
 .level-chip.lv2:not(.active)::before,
 .level-chip.lv3:not(.active)::before,
 .level-chip.lv4:not(.active)::before,
-.level-chip.lv5:not(.active)::before {
+.level-chip.lv5:not(.active)::before,
+.level-chip.lv6:not(.active)::before {
   content: '';
   display: inline-block;
   width: 8px;
@@ -502,11 +506,12 @@ kbd {
   margin-right: 6px;
 }
 
-.level-chip.lv1:not(.active)::before { background: #2e9e5b; }
-.level-chip.lv2:not(.active)::before { background: #2b87c9; }
-.level-chip.lv3:not(.active)::before { background: #d9902a; }
-.level-chip.lv4:not(.active)::before { background: #d4573f; }
-.level-chip.lv5:not(.active)::before { background: #7c5cff; }
+.level-chip.lv1:not(.active)::before { background: #d4573f; }
+.level-chip.lv2:not(.active)::before { background: #d9902a; }
+.level-chip.lv3:not(.active)::before { background: #c9b92b; }
+.level-chip.lv4:not(.active)::before { background: #2b87c9; }
+.level-chip.lv5:not(.active)::before { background: #2e9e5b; }
+.level-chip.lv6:not(.active)::before { background: #7c5cff; }
 
 .audio-btn {
   position: absolute;
