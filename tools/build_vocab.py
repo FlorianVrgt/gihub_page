@@ -436,13 +436,11 @@ def main():
     en_cards = build_cards(HSK1, 1, "en") + [""] + build_cards(HSK2, 2, "en")
     # retirer la virgule finale du dernier élément de chaque liste
     def join(cards):
-        lines = [c for c in cards if c != ""]
-        # ajouter ligne vide de séparation HSK1/HSK2
+        # cartes vides = séparateur HSK1/HSK2 ; on le remplace par un commentaire,
+        # en gardant la virgule sur la dernière carte HSK 1 (sinon : erreur de syntaxe JS).
         sep = cards.index("")
         before = cards[:sep]
         after = cards[sep + 1:]
-        if before:
-            before[-1] = before[-1].rstrip(" ,")
         if after:
             after[-1] = after[-1].rstrip(" ,")
         body = before + ["", "        // — HSK 2 · Élémentaire"] + after
