@@ -1,323 +1,1178 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LingoPulse - Entraînez votre vocabulaire au quotidien</title>
-  <meta name="description" content="Application web légère et gratuite pour s'entraîner aux langues étrangères directement depuis GitHub Pages.">
-  
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .card-flip {
-      perspective: 1000px;
-    }
-    .card-inner {
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-    .card-flipped {
-      transform: rotateY(180deg);
-    }
-    .card-front, .card-back {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-    .card-back {
-      transform: rotateY(180deg);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="LingoPulse — Maîtrisez votre vocabulaire en 5 minutes par jour. Gratuit, sans inscription, 100% local." />
+<title>LingoPulse — Entraînez votre vocabulaire au quotidien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #12121a;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-2: rgba(255, 255, 255, 0.07);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #f5f5f7;
+    --text-dim: #a1a1aa;
+    --text-muted: #71717a;
+    --primary: #7c3aed;
+    --primary-2: #a855f7;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #06b6d4 100%);
+    --gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Background animated gradient */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(124, 58, 237, 0.15), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.12), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.08), transparent 60%);
+    z-index: -1;
+    animation: bgShift 20s ease-in-out infinite;
+  }
+
+  @keyframes bgShift {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(2deg); }
+  }
+
+  /* Grid noise texture */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 10, 15, 0.7);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--gradient);
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4); }
+    50% { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6); }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover::after { width: 100%; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: var(--gradient);
+    color: white;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(124, 58, 237, 0.5);
+  }
+
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--surface-2);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--gradient-soft);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--primary-2);
+    margin-bottom: 24px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.7s ease-out 0.1s backwards;
+  }
+
+  h1 .gradient {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-dim);
+    max-width: 640px;
+    margin: 0 auto 36px;
+    animation: fadeInUp 0.7s ease-out 0.2s backwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+    animation: fadeInUp 0.7s ease-out 0.3s backwards;
+  }
+
+  .btn-lg { padding: 14px 28px; font-size: 1rem; }
+
+  .trust {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    animation: fadeInUp 0.7s ease-out 0.4s backwards;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .trust-item svg { color: var(--success); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ DEMO SECTION ============ */
+  .demo-section {
+    padding: 60px 0 80px;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary-2);
+    margin-bottom: 12px;
+  }
+
+  .section-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .section-header p {
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Language selector */
+  .lang-selector {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .lang-btn {
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lang-btn:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .lang-btn.active {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .stat-card:hover {
+    background: var(--surface-2);
+    transform: translateY(-2px);
+  }
+
+  .stat-icon {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Flashcard */
+  .flashcard-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    perspective: 1500px;
+  }
+
+  .flashcard {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .card-front {
+    background: linear-gradient(145deg, rgba(124, 58, 237, 0.12), rgba(6, 182, 212, 0.08));
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: var(--shadow-lg), 0 0 60px rgba(124, 58, 237, 0.15);
+  }
+
+  .card-back {
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08));
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: rotateY(180deg);
+    box-shadow: var(--shadow-lg), 0 0 60px rgba(16, 185, 129, 0.15);
+  }
+
+  .card-lang {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-hint {
+    position: absolute;
+    bottom: 20px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .word {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+
+  .phonetic {
+    font-size: 1rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+
+  .audio-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gradient);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.25s;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+  }
+
+  .audio-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 28px rgba(124, 58, 237, 0.6);
+  }
+
+  .audio-btn:active { transform: scale(0.95); }
+
+  .audio-btn.playing {
+    animation: audioPulse 0.8s ease-in-out infinite;
+  }
+
+  @keyframes audioPulse {
+    0%, 100% { box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4); }
+    50% { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.8), 0 0 0 10px rgba(124, 58, 237, 0.1); }
+  }
+
+  .translation {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .example {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-sm);
+    max-width: 100%;
+  }
+
+  /* Action buttons */
+  .card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 520px;
+    margin: 24px auto 0;
+  }
+
+  .action-btn {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .action-btn.know {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.08);
+  }
+
+  .action-btn.know:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: var(--success);
+    transform: translateY(-2px);
+  }
+
+  .action-btn.review {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  .action-btn.review:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--danger);
+    transform: translateY(-2px);
+  }
+
+  /* ============ FEATURES ============ */
+  .features-section {
+    padding: 80px 0;
+    position: relative;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gradient);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feature-card:hover {
+    background: var(--surface-2);
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--gradient-soft);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+  }
+
+  .feature-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .feature-card p {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  /* ============ CTA SECTION ============ */
+  .cta-section {
+    padding: 80px 0;
+  }
+
+  .cta-box {
+    background: linear-gradient(145deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.1));
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 24px;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.2), transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-box h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .cta-box p {
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-content p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-card { padding: 12px 8px; }
+    .stat-value { font-size: 1.2rem; }
+    .stat-label { font-size: 0.65rem; }
+    .card-face { padding: 28px 20px; }
+    .card-actions { grid-template-columns: 1fr; }
+    .cta-box { padding: 40px 24px; }
+    .footer-content { flex-direction: column; }
+  }
+
+  /* ============ ANIMATIONS ON SCROLL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body>
 
-  <!-- Header / Navigation -->
-  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">⚡</span>
-        <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">LingoPulse</span>
+<header>
+  <div class="container nav">
+    <a href="#" class="logo">
+      <div class="logo-icon">⚡</div>
+      <span>LingoPulse</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#demo">Entraînement</a></li>
+      <li><a href="#features">Fonctionnalités</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <a href="#demo" class="btn btn-primary">Commencer</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        100% Gratuit · Sans inscription
       </div>
-
-      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-        <a href="#demo" class="hover:text-indigo-600 transition">Entraînement direct</a>
-        <a href="#features" class="hover:text-indigo-600 transition">Fonctionnalités</a>
-        <a href="#stats" class="hover:text-indigo-600 transition">Progression</a>
-      </nav>
-
-      <div class="flex items-center gap-3">
-        <!-- Sélecteur de langue cible -->
-        <select id="langSelect" class="bg-slate-100 border border-slate-200 text-xs md:text-sm font-medium rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-          <option value="es" selected>🇪🇸 Espagnol</option>
-          <option value="en">🇬🇧 Anglais</option>
-          <option value="de">🇩🇪 Allemand</option>
-          <option value="it">🇮🇹 Italien</option>
-          <option value="ja">🇯🇵 Japonais</option>
-        </select>
-        <a href="#demo" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition">
-          Commencer
+      <h1>Maîtrisez votre vocabulaire<br><span class="gradient">en 5 minutes par jour</span></h1>
+      <p class="hero-subtitle">
+        Révisez avec des cartes interactives, écoutez la prononciation réelle et suivez votre progression quotidienne — le tout directement depuis votre navigateur, sans rien installer.
+      </p>
+      <div class="hero-cta">
+        <a href="#demo" class="btn btn-primary btn-lg">
+          🚀 Commencer maintenant
+        </a>
+        <a href="#features" class="btn btn-ghost btn-lg">
+          En savoir plus
         </a>
       </div>
+      <div class="trust">
+        <span class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          Données 100% locales
+        </span>
+        <span class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          Aucune publicité
+        </span>
+        <span class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          Open source
+        </span>
+      </div>
     </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="pt-12 pb-16 px-4 text-center max-w-4xl mx-auto">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-6">
-      <span>✨ 100% Gratuit & Sans inscription</span>
-    </div>
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-      Maîtrisez votre vocabulaire en <span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">5 minutes par jour</span>
-    </h1>
-    <p class="mt-5 text-lg text-slate-600 max-w-2xl mx-auto">
-      Révisez avec des cartes interactives, écoutez la prononciation réelle et suivez votre score quotidien, le tout directement depuis votre navigateur.
-    </p>
   </section>
 
-  <!-- Section Interactive Demo / Flashcard -->
-  <section id="demo" class="max-w-xl mx-auto px-4 pb-20 w-full">
-    <!-- Barre de stats locale -->
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mb-6 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🔥</span>
-        <div>
-          <div class="text-xs text-slate-500 font-medium">Série</div>
-          <div class="text-sm font-bold text-slate-800" id="streakCounter">1 jour</div>
-        </div>
+  <!-- DEMO -->
+  <section class="demo-section" id="demo">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Entraînement interactif</span>
+        <h2>Essayez maintenant</h2>
+        <p>Cliquez sur la carte pour révéler la traduction, écoutez la prononciation, puis indiquez si vous connaissiez le mot.</p>
       </div>
-      <div class="h-8 w-px bg-slate-200"></div>
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🎯</span>
-        <div>
-          <div class="text-xs text-slate-500 font-medium">Cartes révisées</div>
-          <div class="text-sm font-bold text-slate-800" id="reviewedCounter">0</div>
-        </div>
-      </div>
-      <div class="h-8 w-px bg-slate-200"></div>
-      <div class="flex items-center gap-2">
-        <span class="text-xl">⭐</span>
-        <div>
-          <div class="text-xs text-slate-500 font-medium">Réussite</div>
-          <div class="text-sm font-bold text-emerald-600" id="accuracyCounter">100%</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Carte Flashcard -->
-    <div class="card-flip h-64 w-full cursor-pointer group" id="flashcard">
-      <div class="card-inner relative w-full h-full rounded-2xl shadow-md border border-slate-200" id="cardInner">
-        
-        <!-- Face avant (Mot dans la langue étrangère) -->
-        <div class="card-front absolute inset-0 bg-white rounded-2xl p-6 flex flex-col justify-between items-center text-center">
-          <div class="w-full flex justify-between items-center text-xs text-slate-400 font-medium">
-            <span id="cardLangBadge">ESPAGNOL</span>
-            <button id="speakBtn" class="p-1.5 hover:bg-slate-100 rounded-full transition text-slate-600 hover:text-indigo-600" title="Écouter la prononciation">
-              🔊
+      <div class="lang-selector reveal" id="langSelector">
+        <button class="lang-btn active" data-lang="es">🇪🇸 Espagnol</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 Anglais</button>
+        <button class="lang-btn" data-lang="de">🇩🇪 Allemand</button>
+        <button class="lang-btn" data-lang="it">🇮🇹 Italien</button>
+        <button class="lang-btn" data-lang="ja">🇯🇵 Japonais</button>
+      </div>
+
+      <div class="stats-bar reveal">
+        <div class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="streakValue">0</div>
+          <div class="stat-label">Série</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" id="cardsValue">0</div>
+          <div class="stat-label">Cartes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="successValue">0%</div>
+          <div class="stat-label">Réussite</div>
+        </div>
+      </div>
+
+      <div class="flashcard-wrapper reveal">
+        <div class="flashcard" id="flashcard">
+          <div class="card-face card-front">
+            <div class="card-lang" id="cardLang">🇪🇸 ESPAGNOL</div>
+            <button class="audio-btn" id="audioBtn" aria-label="Écouter la prononciation">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
             </button>
+            <div class="word" id="wordFront">el desafío</div>
+            <div class="phonetic" id="phonetic">/el de.sa.ˈfi.o/</div>
+            <div class="card-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 15l-6-6M9 15l6-6"/></svg>
+              Cliquez pour retourner
+            </div>
           </div>
-          <div>
-            <h2 id="cardWord" class="text-3xl sm:text-4xl font-extrabold text-slate-900">el desafío</h2>
-            <p id="cardPhonetic" class="text-sm text-slate-500 mt-1 font-mono">/el desaˈfi.o/</p>
+          <div class="card-face card-back">
+            <div class="card-lang">🇫🇷 TRADUCTION</div>
+            <div class="translation" id="wordBack">le défi</div>
+            <div class="example" id="example">"Aceptar el desafío" — Accepter le défi</div>
+            <div class="card-hint">Cliquez pour revenir au mot</div>
           </div>
-          <p class="text-xs text-slate-400 font-medium">Cliquez pour voir la traduction ↻</p>
         </div>
-
-        <!-- Face arrière (Traduction & Exemple en français) -->
-        <div class="card-back absolute inset-0 bg-gradient-to-br from-indigo-600 to-violet-700 text-white rounded-2xl p-6 flex flex-col justify-between items-center text-center">
-          <div class="w-full flex justify-start text-xs text-indigo-200 font-medium">
-            TRADUCTION
-          </div>
-          <div>
-            <h2 id="cardTranslation" class="text-3xl font-bold">le défi</h2>
-            <p id="cardExample" class="text-sm text-indigo-100 mt-2 italic">"Aceptar el desafío" (Accepter le défi)</p>
-          </div>
-          <p class="text-xs text-indigo-200">Cliquez pour revenir au mot</p>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Boutons d'action pour évaluer la difficulté -->
-    <div class="mt-6 flex gap-3">
-      <button id="btnHard" class="flex-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold py-3 rounded-xl transition text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
-        <span>❌</span> À revoir
-      </button>
-      <button id="btnEasy" class="flex-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-semibold py-3 rounded-xl transition text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
-        <span>✅</span> Je le savais
-      </button>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" class="bg-white border-y border-slate-200 py-16 px-4">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="text-3xl font-bold text-slate-900">Pourquoi cette méthode fonctionne</h2>
-        <p class="text-slate-600 mt-2 text-sm sm:text-base">Une approche active basée sur la répétition et l'immersion auditive directe.</p>
       </div>
 
-      <div class="grid sm:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4">🔁</div>
-          <h3 class="font-bold text-slate-900 mb-1">Répétition espacée</h3>
-          <p class="text-sm text-slate-600">Revenez plus souvent sur les mots hésitants pour ancrer le vocabulaire dans votre mémoire long terme.</p>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">🎧</div>
-          <h3 class="font-bold text-slate-900 mb-1">Synthèse vocale native</h3>
-          <p class="text-sm text-slate-600">Écoutez la phonétique et l'accent sans API tierce payante grâce au moteur audio de votre navigateur.</p>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center text-xl mb-4">💾</div>
-          <h3 class="font-bold text-slate-900 mb-1">Données 100% locales</h3>
-          <p class="text-sm text-slate-600">Votre progression reste sur votre appareil via LocalStorage. Aucune fuite de données, respect total de la vie privée.</p>
-        </div>
+      <div class="card-actions reveal">
+        <button class="action-btn review" id="btnReview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          À revoir
+        </button>
+        <button class="action-btn know" id="btnKnow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Je le savais
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="mt-auto py-8 bg-slate-900 text-slate-400 text-xs sm:text-sm text-center border-t border-slate-800">
-    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p>© <span id="year"></span> LingoPulse — Hébergé gratuitement sur GitHub Pages.</p>
-      <div class="flex gap-4">
-        <a href="https://github.com" target="_blank" class="hover:text-white transition">Voir sur GitHub</a>
-        <a href="#demo" class="hover:text-white transition">Reprendre l'exercice</a>
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Pourquoi LingoPulse</span>
+        <h2>Une méthode qui fonctionne</h2>
+        <p>Une approche active basée sur la répétition espacée et l'immersion auditive directe.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">🔁</div>
+          <h3>Répétition espacée</h3>
+          <p>Revenez plus souvent sur les mots hésitants pour ancrer le vocabulaire dans votre mémoire à long terme, au bon rythme.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">🎧</div>
+          <h3>Synthèse vocale native</h3>
+          <p>Écoutez la phonétique et l'accent grâce au moteur audio de votre navigateur. Aucune API tierce, aucun coût.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">💾</div>
+          <h3>Données 100% locales</h3>
+          <p>Votre progression reste sur votre appareil via LocalStorage. Aucune fuite de données, respect total de votre vie privée.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">⚡</div>
+          <h3>Ultra rapide</h3>
+          <p>Aucune inscription, aucune installation. Ouvrez la page et commencez à apprendre en moins de 3 secondes.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">🌍</div>
+          <h3>5 langues supportées</h3>
+          <p>Espagnol, anglais, allemand, italien et japonais — avec des decks de vocabulaire soigneusement sélectionnés.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">📊</div>
+          <h3>Suivi de progression</h3>
+          <p>Visualisez votre série quotidienne, le nombre de cartes révisées et votre taux de réussite en temps réel.</p>
+        </div>
       </div>
     </div>
-  </footer>
+  </section>
 
-  <!-- Script interactif -->
-  <script>
-    // Jeux de données pour l'entraînement
-    const datasets = {
-      es: [
-        { word: "el desafío", phonetic: "/el desaˈfi.o/", translation: "le défi", example: "Aceptar el desafío.", code: "es-ES" },
-        { word: "la costumbre", phonetic: "/la kosˈtum.bɾe/", translation: "l'habitude", example: "Es una buena costumbre.", code: "es-ES" },
-        { word: "aprovechar", phonetic: "/apɾo.beˈtʃaɾ/", translation: "profiter / rentabiliser", example: "Aprovecha el tiempo.", code: "es-ES" },
-        { word: "desarrollar", phonetic: "/desaroˈʎaɾ/", translation: "développer", example: "Desarrollar una aplicación.", code: "es-ES" }
-      ],
-      en: [
-        { word: "relentless", phonetic: "/rɪˈlent.ləs/", translation: "implacable / acharné", example: "Their relentless effort paid off.", code: "en-US" },
-        { word: "serendipity", phonetic: "/ˌser.ənˈdɪp.ə.ti/", translation: "heureux hasard", example: "A stroke of serendipity.", code: "en-US" },
-        { word: "thrive", phonetic: "/θraɪv/", translation: "prospérer / s'épanouir", example: "Plants thrive in sunlight.", code: "en-US" },
-        { word: "overcome", phonetic: "/ˌoʊ.vɚˈkʌm/", translation: "surmonter", example: "Overcome all obstacles.", code: "en-US" }
-      ],
-      de: [
-        { word: "die Herausforderung", phonetic: "/hɛˈʁaʊ̯sˌfɔʁdəʁʊŋ/", translation: "le défi / challenge", example: "Eine neue Herausforderung.", code: "de-DE" },
-        { word: "die Sehnsucht", phonetic: "/ˈzeːnˌzʊxt/", translation: "le désir ardent / nostalgie", example: "Eine Sehnsucht nach Freiheit.", code: "de-DE" },
-        { word: "begeistern", phonetic: "/bəˈɡaɪ̯stɐn/", translation: "passionner / enthousiasmer", example: "Das Projekt begeistert mich.", code: "de-DE" }
-      ],
-      it: [
-        { word: "il traguardo", phonetic: "/traˈɡwar.do/", translation: "l'objectif / la ligne d'arrivée", example: "Raggiungere il traguardo.", code: "it-IT" },
-        { word: "mozzafiato", phonetic: "/mott͡saˈfja.to/", translation: "à couper le souffle", example: "Un panorama mozzafiato.", code: "it-IT" },
-        { word: "scherzare", phonetic: "/skerˈtsa.re/", translation: "plaisanter", example: "Non sto scherzando.", code: "it-IT" }
-      ],
-      ja: [
-        { word: "木漏れ日 (Komorebi)", phonetic: "/ko.mo.ɾe.bi/", translation: "lumière à travers les arbres", example: "木漏れ日が美しい。", code: "ja-JP" },
-        { word: "改善 (Kaizen)", phonetic: "/kai.zeɴ/", translation: "amélioration continue", example: "継続的な改善。", code: "ja-JP" },
-        { word: "挑戦 (Chōsen)", phonetic: "/t͡ɕoː.seɴ/", translation: "défi / tentative", example: "新しい挑戦を始める。", code: "ja-JP" }
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box reveal">
+        <h2>Prêt à booster votre vocabulaire ?</h2>
+        <p>Rejoignez des milliers d'apprenants qui progressent chaque jour avec LingoPulse.</p>
+        <a href="#demo" class="btn btn-primary btn-lg">🚀 Commencer gratuitement</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-content">
+    <p>© 2026 LingoPulse — Hébergé gratuitement sur GitHub Pages</p>
+    <ul class="footer-links">
+      <li><a href="https://github.com" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.4v3.5c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+        GitHub
+      </a></li>
+      <li><a href="#demo">Reprendre l'exercice</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">Bien joué !</span>
+</div>
+
+<script>
+  // ============ VOCABULARY DATA ============
+  const vocab = {
+    es: {
+      flag: '🇪🇸', name: 'ESPAGNOL',
+      tts: 'es-ES',
+      cards: [
+        { word: 'el desafío', phonetic: '/el de.sa.ˈfi.o/', translation: 'le défi', example: '"Aceptar el desafío" — Accepter le défi' },
+        { word: 'la aventura', phonetic: '/la a.ben.ˈtu.ɾa/', translation: 'l\'aventure', example: '"Una gran aventura" — Une grande aventure' },
+        { word: 'el corazón', phonetic: '/el ko.ɾa.ˈson/', translation: 'le cœur', example: '"De todo corazón" — De tout cœur' },
+        { word: 'la biblioteca', phonetic: '/la bi.blio.ˈte.ka/', translation: 'la bibliothèque', example: '"Voy a la biblioteca" — Je vais à la bibliothèque' },
+        { word: 'desarrollar', phonetic: '/de.sa.ro.ˈʎaɾ/', translation: 'développer', example: '"Desarrollar habilidades" — Développer des compétences' }
       ]
-    };
-
-    let currentLang = 'es';
-    let currentIndex = 0;
-    let reviewedCount = parseInt(localStorage.getItem('lingo_reviewed') || '0', 10);
-    let correctCount = parseInt(localStorage.getItem('lingo_correct') || '0', 10);
-
-    // Éléments DOM
-    const flashcard = document.getElementById('flashcard');
-    const cardInner = document.getElementById('cardInner');
-    const cardWord = document.getElementById('cardWord');
-    const cardPhonetic = document.getElementById('cardPhonetic');
-    const cardTranslation = document.getElementById('cardTranslation');
-    const cardExample = document.getElementById('cardExample');
-    const cardLangBadge = document.getElementById('cardLangBadge');
-    const langSelect = document.getElementById('langSelect');
-    const speakBtn = document.getElementById('speakBtn');
-    const btnEasy = document.getElementById('btnEasy');
-    const btnHard = document.getElementById('btnHard');
-    const reviewedCounter = document.getElementById('reviewedCounter');
-    const accuracyCounter = document.getElementById('accuracyCounter');
-
-    // Mise à jour de l'affichage de la carte
-    function updateCard() {
-      const list = datasets[currentLang];
-      const item = list[currentIndex % list.length];
-      
-      cardInner.classList.remove('card-flipped');
-      setTimeout(() => {
-        cardWord.textContent = item.word;
-        cardPhonetic.textContent = item.phonetic;
-        cardTranslation.textContent = item.translation;
-        cardExample.textContent = item.example;
-        cardLangBadge.textContent = langSelect.options[langSelect.selectedIndex].text.toUpperCase();
-      }, 150);
+    },
+    en: {
+      flag: '🇬🇧', name: 'ANGLAIS',
+      tts: 'en-GB',
+      cards: [
+        { word: 'serendipity', phonetic: '/ˌser.ən.ˈdɪp.ɪ.ti/', translation: 'heureux hasard', example: '"A fortunate serendipity" — Un heureux hasard' },
+        { word: 'to thrive', phonetic: '/θɹaɪv/', translation: 'prospérer', example: '"To thrive in difficult times" — Prospérer en temps difficile' },
+        { word: 'resilience', phonetic: '/ɹɪ.ˈzɪl.i.əns/', translation: 'la résilience', example: '"Show your resilience" — Montrez votre résilience' },
+        { word: 'to wander', phonetic: '/ˈwɒn.də/', translation: 'vagabonder', example: '"Wander through the city" — Vagabonder dans la ville' },
+        { word: 'mindful', phonetic: '/ˈmaɪnd.fəl/', translation: 'conscient / attentif', example: '"Be mindful of others" — Soyez attentif aux autres' }
+      ]
+    },
+    de: {
+      flag: '🇩🇪', name: 'ALLEMAND',
+      tts: 'de-DE',
+      cards: [
+        { word: 'die Gemütlichkeit', phonetic: '/ɡə.ˈmyːt.lɪç.kaɪt/', translation: 'la convivialité', example: '"Deutsche Gemütlichkeit" — La convivialité allemande' },
+        { word: 'schmetterling', phonetic: '/ˈʃmɛt.tɐ.lɪŋ/', translation: 'le papillon', example: '"Ein schöner Schmetterling" — Un beau papillon' },
+        { word: 'die Wanderlust', phonetic: '/ˈvan.dɐ.lʊst/', translation: 'l\'envie de voyager', example: '"Die Wanderlust spüren" — Ressentir l\'envie de voyager' },
+        { word: 'vergissmeinnicht', phonetic: '/fɛ.ˈɡɪs.maɪ.nɪçt/', translation: 'le myosotis (ne m\'oublie pas)', example: '"Vergiss mein nicht" — Ne m\'oublie pas' },
+        { word: 'die Zeit', phonetic: '/tsaɪt/', translation: 'le temps', example: '"Die Zeit vergeht" — Le temps passe' }
+      ]
+    },
+    it: {
+      flag: '🇮🇹', name: 'ITALIEN',
+      tts: 'it-IT',
+      cards: [
+        { word: 'la bellezza', phonetic: '/la bel.ˈlet.tsa/', translation: 'la beauté', example: '"La bellezza dell\'arte" — La beauté de l\'art' },
+        { word: 'il viaggio', phonetic: '/il ˈvjad.dʒo/', translation: 'le voyage', example: '"Buon viaggio!" — Bon voyage !' },
+        { word: 'la speranza', phonetic: '/la spe.ˈɾan.tsa/', translation: 'l\'espoir', example: '"L\'ultima speranza" — Le dernier espoir' },
+        { word: 'meraviglioso', phonetic: '/me.ɾa.vi.ˈʎo.zo/', translation: 'merveilleux', example: '"Uno spettacolo meraviglioso" — Un spectacle merveilleux' },
+        { word: 'la cucina', phonetic: '/la ku.ˈtʃi.na/', translation: 'la cuisine', example: '"La cucina italiana" — La cuisine italienne' }
+      ]
+    },
+    ja: {
+      flag: '🇯🇵', name: 'JAPONAIS',
+      tts: 'ja-JP',
+      cards: [
+        { word: '木漏れ日', phonetic: 'komorebi', translation: 'lumière à travers les feuilles', example: '木漏れ日が美しい — La lumière à travers les feuilles est belle' },
+        { word: '侘寂', phonetic: 'wabi-sabi', translation: 'beauté de l\'imperfection', example: '侘寂の美学 — L\'esthétique du wabi-sabi' },
+        { word: '頑張る', phonetic: 'ganbaru', translation: 'faire de son mieux', example: '頑張って！ — Fais de ton mieux !' },
+        { word: '夢', phonetic: 'yume', translation: 'le rêve', example: '美しい夢 — Un beau rêve' },
+        { word: '友達', phonetic: 'tomodachi', translation: 'l\'ami(e)', example: '私の友達 — Mon ami(e)' }
+      ]
     }
+  };
 
-    // Mise à jour des compteurs
-    function updateStats() {
-      reviewedCounter.textContent = reviewedCount;
-      const acc = reviewedCount > 0 ? Math.round((correctCount / reviewedCount) * 100) : 100;
-      accuracyCounter.textContent = acc + "%";
-      localStorage.setItem('lingo_reviewed', reviewedCount);
-      localStorage.setItem('lingo_correct', correctCount);
+  // ============ STATE ============
+  let currentLang = 'es';
+  let currentCardIndex = 0;
+  let stats = JSON.parse(localStorage.getItem('lingopulse_stats')) || {
+    streak: 1,
+    cards: 0,
+    known: 0,
+    total: 0,
+    lastDate: new Date().toDateString()
+  };
+
+  // Update streak on load
+  const today = new Date().toDateString();
+  if (stats.lastDate !== today) {
+    const lastDate = new Date(stats.lastDate);
+    const diff = Math.floor((new Date(today) - lastDate) / (1000 * 60 * 60 * 24));
+    if (diff === 1) stats.streak += 1;
+    else if (diff > 1) stats.streak = 1;
+    stats.lastDate = today;
+    saveStats();
+  }
+
+  // ============ DOM ============
+  const flashcard = document.getElementById('flashcard');
+  const wordFront = document.getElementById('wordFront');
+  const phonetic = document.getElementById('phonetic');
+  const wordBack = document.getElementById('wordBack');
+  const example = document.getElementById('example');
+  const cardLang = document.getElementById('cardLang');
+  const audioBtn = document.getElementById('audioBtn');
+  const btnKnow = document.getElementById('btnKnow');
+  const btnReview = document.getElementById('btnReview');
+  const langButtons = document.querySelectorAll('.lang-btn');
+
+  // ============ FUNCTIONS ============
+  function saveStats() {
+    localStorage.setItem('lingopulse_stats', JSON.stringify(stats));
+  }
+
+  function updateStatsUI() {
+    document.getElementById('streakValue').textContent = stats.streak;
+    document.getElementById('cardsValue').textContent = stats.cards;
+    const success = stats.total > 0 ? Math.round((stats.known / stats.total) * 100) : 0;
+    document.getElementById('successValue').textContent = success + '%';
+  }
+
+  function renderCard() {
+    const data = vocab[currentLang];
+    const card = data.cards[currentCardIndex];
+    wordFront.textContent = card.word;
+    phonetic.textContent = card.phonetic;
+    wordBack.textContent = card.translation;
+    example.textContent = card.example;
+    cardLang.textContent = `${data.flag} ${data.name}`;
+    flashcard.classList.remove('flipped');
+  }
+
+  function nextCard() {
+    const data = vocab[currentLang];
+    currentCardIndex = (currentCardIndex + 1) % data.cards.length;
+    renderCard();
+  }
+
+  function speak() {
+    const data = vocab[currentLang];
+    const card = data.cards[currentCardIndex];
+    if (!('speechSynthesis' in window)) {
+      showToast('⚠️', 'Synthèse vocale non supportée');
+      return;
     }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(card.word);
+    utter.lang = data.tts;
+    utter.rate = 0.85;
+    audioBtn.classList.add('playing');
+    utter.onend = () => audioBtn.classList.remove('playing');
+    utter.onerror = () => audioBtn.classList.remove('playing');
+    window.speechSynthesis.speak(utter);
+  }
 
-    // Retournement de la carte
-    flashcard.addEventListener('click', (e) => {
-      if (e.target.closest('#speakBtn')) return;
-      cardInner.classList.toggle('card-flipped');
+  function showToast(icon, msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ============ EVENTS ============
+  flashcard.addEventListener('click', () => flashcard.classList.toggle('flipped'));
+  audioBtn.addEventListener('click', (e) => { e.stopPropagation(); speak(); });
+
+  btnKnow.addEventListener('click', () => {
+    stats.cards += 1;
+    stats.known += 1;
+    stats.total += 1;
+    saveStats();
+    updateStatsUI();
+    showToast('✅', 'Bien joué !');
+    nextCard();
+  });
+
+  btnReview.addEventListener('click', () => {
+    stats.cards += 1;
+    stats.total += 1;
+    saveStats();
+    updateStatsUI();
+    showToast('🔁', 'On reverra ce mot plus tard');
+    nextCard();
+  });
+
+  langButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      langButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentLang = btn.dataset.lang;
+      currentCardIndex = 0;
+      renderCard();
     });
+  });
 
-    // Prononciation audio via Web Speech API
-    speakBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const list = datasets[currentLang];
-      const item = list[currentIndex % list.length];
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(item.word);
-        utterance.lang = item.code;
-        window.speechSynthesis.speak(utterance);
-      }
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
+  }, { threshold: 0.1 });
 
-    // Actions utilisateur
-    btnEasy.addEventListener('click', () => {
-      reviewedCount++;
-      correctCount++;
-      currentIndex++;
-      updateStats();
-      updateCard();
-    });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    btnHard.addEventListener('click', () => {
-      reviewedCount++;
-      currentIndex++;
-      updateStats();
-      updateCard();
-    });
+  // Init
+  renderCard();
+  updateStatsUI();
+</script>
 
-    // Changement de langue
-    langSelect.addEventListener('change', (e) => {
-      currentLang = e.target.value;
-      currentIndex = 0;
-      updateCard();
-    });
-
-    // Initialisation
-    document.getElementById('year').textContent = new Date().getFullYear();
-    updateStats();
-    updateCard();
-  </script>
 </body>
 </html>
