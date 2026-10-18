@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="LingoPulse — Apprenez le chinois depuis le français ou l'anglais, 5 minutes par jour. Gratuit, sans inscription, 100% local." />
-<title>LingoPulse — Apprenez le chinois depuis le français et l'anglais</title>
+<meta name="description" content="LingoPulse — Cartes de vocabulaire pour apprendre le chinois depuis le français ou l'anglais. Gratuit, sans inscription, 100% local." />
+<title>LingoPulse — Cartes de vocabulaire chinois</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=2026-10-18" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2026-10-18-redesign" />
 </head>
 <body>
 
 <header>
   <div class="container nav">
     <a href="#" class="logo">
-      <div class="logo-icon">⚡</div>
+      <div class="logo-icon">文</div>
       <span>LingoPulse</span>
     </a>
     <ul class="nav-links">
@@ -32,19 +32,18 @@
   <section class="hero">
     <div class="container">
       <div class="badge">
-        <span class="badge-dot"></span>
-        100% Gratuit · Sans inscription
+        Cartes de vocabulaire · français &amp; anglais → chinois
       </div>
-      <h1>Maîtrisez le vocabulaire chinois<br><span class="gradient">en 5 minutes par jour</span></h1>
+      <h1>Apprenez le chinois<br><span class="gradient">à votre rythme, 5 minutes par jour</span></h1>
       <p class="hero-subtitle">
-        Apprenez le chinois (中文) depuis le français ou l'anglais. Révisez avec des cartes interactives, écoutez la prononciation et suivez votre progression quotidienne — le tout directement depuis votre navigateur, sans rien installer.
+        Révisez le vocabulaire chinois (中文) avec des cartes interactives, écoutez la prononciation et suivez votre progression — directement depuis votre navigateur, sans rien installer.
       </p>
       <div class="hero-cta">
         <a href="#demo" class="btn btn-primary btn-lg">
-          🚀 Commencer maintenant
+          Commencer à réviser
         </a>
         <a href="#features" class="btn btn-ghost btn-lg">
-          En savoir plus
+          Découvrir la méthode
         </a>
       </div>
       <div class="trust">
@@ -69,7 +68,7 @@
     <div class="container">
       <div class="section-header reveal">
         <span class="section-tag">Entraînement interactif</span>
-        <h2>Essayez maintenant</h2>
+        <h2>Séance de révision</h2>
         <p>Choisissez votre langue de départ (français ou anglais), cliquez sur la carte pour révéler le mot chinois, écoutez la prononciation, puis indiquez si vous connaissiez le mot.</p>
       </div>
 
@@ -99,7 +98,7 @@
       <div class="flashcard-wrapper reveal">
         <div class="flashcard" id="flashcard">
           <div class="card-face card-front">
-            <div class="card-lang" id="cardLang">🇫🇷 MOT À TRADUIRE</div>
+            <div class="card-lang" id="cardLang">🇫🇷 Mot à traduire</div>
             <button class="audio-btn" id="audioBtn" aria-label="Écouter la prononciation">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -115,7 +114,7 @@
             </div>
           </div>
           <div class="card-face card-back">
-            <div class="card-lang">🇨🇳 CHINOIS</div>
+            <div class="card-lang">🇨🇳 Chinois</div>
             <div class="translation" id="wordBack">挑战</div>
             <div class="example" id="example">「接受挑战」— Accepter le défi</div>
             <div class="card-hint">Cliquez pour revenir au mot</div>
@@ -140,9 +139,9 @@
   <section class="features-section" id="features">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">Pourquoi LingoPulse</span>
-        <h2>Une méthode qui fonctionne</h2>
-        <p>Une approche active basée sur la répétition espacée et l'immersion auditive directe.</p>
+        <span class="section-tag">Méthode</span>
+        <h2>Comment LingoPulse vous aide à retenir</h2>
+        <p>Une approche active, basée sur la répétition espacée et l'immersion auditive directe — sans distraction ni artifices.</p>
       </div>
 
       <div class="features-grid">
@@ -153,7 +152,7 @@
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon">🎧</div>
-          <h3>Synthèse vocale native</h3>
+          <h3>Prononciation audio</h3>
           <p>Écoutez la phonétique et l'accent grâce au moteur audio de votre navigateur. Aucune API tierce, aucun coût.</p>
         </div>
         <div class="feature-card reveal">
@@ -162,9 +161,9 @@
           <p>Votre progression reste sur votre appareil via LocalStorage. Aucune fuite de données, respect total de votre vie privée.</p>
         </div>
         <div class="feature-card reveal">
-          <div class="feature-icon">⚡</div>
-          <h3>Ultra rapide</h3>
-          <p>Aucune inscription, aucune installation. Ouvrez la page et commencez à apprendre en moins de 3 secondes.</p>
+          <div class="feature-icon">🕓</div>
+          <h3>Sessions courtes</h3>
+          <p>Aucune inscription, aucune installation. Ouvrez la page et révisez quelques minutes, ici et maintenant.</p>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon">🌍</div>
@@ -176,17 +175,6 @@
           <h3>Suivi de progression</h3>
           <p>Visualisez votre série quotidienne, le nombre de cartes révisées et votre taux de réussite en temps réel.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="container">
-      <div class="cta-box reveal">
-        <h2>Prêt à booster votre vocabulaire chinois ?</h2>
-        <p>Rejoignez des milliers d'apprenants qui progressent chaque jour avec LingoPulse, du français ou de l'anglais vers le chinois.</p>
-        <a href="#demo" class="btn btn-primary btn-lg">🚀 Commencer gratuitement</a>
       </div>
     </div>
   </section>
@@ -211,6 +199,6 @@
 </div>
 
 
-<script src="js/app.js?v=2026-10-18" defer></script>
+<script src="js/app.js?v=2026-10-18-redesign" defer></script>
 </body>
 </html>
