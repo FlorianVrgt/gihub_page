@@ -10,9 +10,23 @@ pour apprendre le chinois depuis le français ou l'anglais, 100 % côté client.
 ├── index.html      # Structure de la page (markup uniquement)
 ├── css/
 │   └── style.css   # Tous les styles (variables, composants, animations, responsive)
-└── js/
-    └── app.js      # Logique de l'app (données de vocabulaire, état, audio, événements)
+├── js/
+│   └── app.js      # Logique de l'app (données de vocabulaire, état, audio, événements)
+└── tools/
+    ├── hsk_data.py    # Vocabulaire HSK 1 & 2 (mot, pinyin, FR, EN, exemples)
+    └── build_vocab.py # Régénère le bloc `vocab` de js/app.js
 ```
+
+## Mettre à jour le vocabulaire
+
+Modifiez `tools/hsk_data.py`, puis lancez :
+
+```
+python3 tools/build_vocab.py --check   # contrôles seulement
+python3 tools/build_vocab.py           # réécrit js/app.js
+```
+
+Aucune dépendance : le pinyin est saisi à la main (tons neutres corrects).
 
 ## Principes
 

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=2026-10-18-cards" />
+<link rel="stylesheet" href="css/style.css?v=2026-10-27-fix" />
 </head>
 <body>
 
@@ -44,7 +44,7 @@
       <div class="streak-pill" title="Série quotidienne">
         🔥 <strong id="sideStreak">0</strong>&nbsp;j
       </div>
-      <a class="side-item" href="https://github.com" target="_blank" rel="noopener">
+      <a class="side-item" href="https://github.com/FlorianVrgt/gihub_page" target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.4v3.5c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
         <span>GitHub</span>
       </a>
@@ -96,6 +96,11 @@
               <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Retourner la carte">
                 <div class="card-face card-front">
                   <div class="card-lang" id="cardLang">🇫🇷 Mot à traduire</div>
+                  <div class="word" id="wordFront">bonjour</div>
+                  <div class="card-hint">Espace · Cliquez pour retourner</div>
+                </div>
+                <div class="card-face card-back">
+                  <div class="card-lang">🇨🇳 Chinois</div>
                   <button class="audio-btn" id="audioBtn" aria-label="Écouter la prononciation">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -103,11 +108,6 @@
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
                     </svg>
                   </button>
-                  <div class="word" id="wordFront">bonjour</div>
-                  <div class="card-hint">Espace · Cliquez pour retourner</div>
-                </div>
-                <div class="card-face card-back">
-                  <div class="card-lang">🇨🇳 Chinois</div>
                   <div class="translation" id="wordBack">你好</div>
                   <div class="phonetic" id="phonetic">nǐ hǎo</div>
                   <div class="example" id="example">「你好，很高兴认识你！」— Bonjour, enchanté !</div>
@@ -248,7 +248,7 @@
               <strong>Données locales</strong>
               <span class="setting-desc">Tout est stocké dans votre navigateur — aucune donnée envoyée.</span>
             </div>
-            <a class="btn btn-ghost" href="https://github.com" target="_blank" rel="noopener">Voir le code source</a>
+            <a class="btn btn-ghost" href="https://github.com/FlorianVrgt/gihub_page" target="_blank" rel="noopener">Voir le code source</a>
           </div>
         </div>
       </section>
@@ -266,6 +266,6 @@
   <span id="toastMsg">Bien joué !</span>
 </div>
 
-<script src="js/app.js?v=2026-10-18-cards" defer></script>
+<script src="js/app.js?v=2026-10-27-fix" defer></script>
 </body>
 </html>
